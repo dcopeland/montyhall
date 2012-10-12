@@ -29,6 +29,7 @@ h1 {
 
 #runState, #speedState {
   margin-bottom: 10px;
+  margin-top: 10px;
 }
 #runControl {
   border: 1px solid #DDD;
