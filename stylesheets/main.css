@@ -11,6 +11,9 @@ h1 {
   font-weight: normal;
   margin-left: 20px;
 }
+.footnote {
+  font-size: smaller;
+}
 .column {
   float: left;
   margin-left: 20px;
