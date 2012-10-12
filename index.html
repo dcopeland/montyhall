@@ -59,8 +59,10 @@
 
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
         <script type="text/javascript">
+            // globals
             running = true
             speed = 100 // slow: 100, fast: 10
+            results = []
 
             function reset() {
                 for (n=1; n <= 3; n++) {
@@ -71,9 +73,12 @@
             }
 
             function display() {
-                reset()
                 result = results.shift()
+                if (results.length < 10) {
+                    loadResultSet()
+                }
                 if (result) {
+                    reset()
                     setTimeout(function() {
                         $('#door_' + result.initial_choice).html('First Choice')
                     }, speed)
@@ -87,6 +92,9 @@
                         $('#door_' + result.winning_choice).addClass('winning')
                         declareWinner(result)
                     }, 4 * speed)
+                }
+                if (running) {
+                    setTimeout("display()", 10 * speed)
                 }
             }
 
@@ -121,34 +129,26 @@
             }
 
             function loadResultSet() {
-                if (running == true) {
-                    $('#runState').html('running')
-                    $.get('/results?num=' + (20 * (100 / speed)),
-                            function(data){
-                        results.push($.parseJSON(data))
-                        var n = 10 * speed
-                        for (var idx in results) {
-                            setTimeout(function() {
-                                display()
-                            }, n)
-                            n += 10 * speed
-                        }
-                    })
-                } else {
-                    $('#runState').html('stopped')
-                }
-                setTimeout('loadResultSet()', (100 * speed))
+                $.get('/results?num=1000',
+                        function(data){
+                    newResults = $.parseJSON(data)
+                    for (var idx in newResults) {
+                        results.push(newResults[idx])
+                    }
+                })
             }
 
             function runStop() {
                 if (running == false) {
                     running = true
                     $('#runStopButton').html('STOP')
-                    $('#runState').html('starting...')
+                    $('#runState').html('running')
+                    display()
                 } else {
                     running = false
+                    results = []
                     $('#runStopButton').html('RUN')
-                    $('#runState').html('stopping...')
+                    $('#runState').html('stopped')
                 }
             }
 
@@ -165,8 +165,7 @@
             }
 
             $(document).ready(function(){
-                loadResultSet()
-                //runInterval = setInterval("loadResultSet()", 11000)
+                display()
             })
         </script>
     </body>
