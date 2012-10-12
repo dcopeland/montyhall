@@ -102,6 +102,12 @@
                 the other is the winner. Thus the switch strategy wins.</span>
             </div>
         </div>
+        <br class="clear"/>
+        <div id="attrib">
+            <span class="footnote">Built by and &copy; <a href="http://about.me/dpc47">
+                Dan Copeland</a>
+            </span
+        </div>
 
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
         <script type="text/javascript">
@@ -112,7 +118,7 @@
 
             function reset() {
                 for (n=1; n <= 3; n++) {
-                    $('#door_' + n).removeClass('winning losing').html('')
+                    $('#door_' + n).removeClass('winning losing chosen').html('')
                 }
                 $('#stay_result').removeClass('winning losing').html('Stay strategy')
                 $('#switch_result').removeClass('winning losing').html('Switch strategy')
@@ -126,7 +132,7 @@
                 if (result) {
                     reset()
                     setTimeout(function() {
-                        $('#door_' + result.initial_choice).html('First Choice')
+                        $('#door_' + result.initial_choice).html('First Choice').addClass('chosen')
                     }, speed)
                     setTimeout(function() {
                         $('#door_' + result.revealed_choice).html('Revealed').addClass('losing')
@@ -135,7 +141,7 @@
                         $('#door_' + result.switch_choice).html('Switch')
                     }, 3 * speed)
                     setTimeout(function() {
-                        $('#door_' + result.winning_choice).addClass('winning')
+                        $('#door_' + result.winning_choice).removeClass('chosen').addClass('winning')
                         declareWinner(result)
                     }, 4 * speed)
                 }
