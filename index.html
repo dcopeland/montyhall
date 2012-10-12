@@ -1,0 +1,173 @@
+<html>
+    <head>
+        <link href="/stylesheets/main.css" type="text/css" rel="stylesheet">
+        <link href='http://fonts.googleapis.com/css?family=Fanwood+Text' rel='stylesheet' type='text/css'>
+    </head>
+    <body>
+        <h1>Monty Hall Problem Demonstration</h1>
+        <div id="door_display">
+            <div id="door_1" class="door">
+            </div>
+            <div id="door_2" class="door">
+            </div>
+            <div id="door_3" class="door">
+            </div>
+        </div>
+
+        <br class="clear" />
+
+        <div class="player">
+            <h3 id="stay_result">Stay strategy</h3>
+            <dl>
+                <dt>Wins</dt>
+                <dd id="stay_wins">0</dd>
+            </dl>
+            <dl>
+                <dt>Losses</dt>
+                <dd id="stay_losses">0</dd>
+            </dl>
+            <dl>
+                <dt>Win Percentage</dt>
+                <dd id="stay_pct">&nbsp;</dd>
+            </dl>
+        </div>
+
+        <div class="player">
+            <h3 id="switch_result">Switch strategy</h3>
+            <dl>
+                <dt>Wins</dt>
+                <dd id="switch_wins">0</dd>
+            </dl>
+            <dl>
+                <dt>Losses</dt>
+                <dd id="switch_losses">0</dd>
+            </dl>
+            <dl>
+                <dt>Win Percentage</dt>
+                <dd id="switch_pct">&nbsp;</dd>
+            </dl>
+        </div>
+
+        <br class="clear" />
+
+        <div id="runControl">
+            <div id="runState">running</div>
+            <button id="runStopButton" onClick="runStop()">STOP</button>
+            <div id="speedState">slow</div>
+            <button id="speedButton" onClick="changeSpeed()">FASTER</button>
+        </div>
+
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script type="text/javascript">
+            running = true
+            speed = 100 // slow: 100, fast: 10
+
+            function reset() {
+                for (n=1; n <= 3; n++) {
+                    $('#door_' + n).removeClass('winning losing').html('')
+                }
+                $('#stay_result').removeClass('winning losing').html('Stay strategy')
+                $('#switch_result').removeClass('winning losing').html('Switch strategy')
+            }
+
+            function display() {
+                reset()
+                result = results.shift()
+                if (result) {
+                    setTimeout(function() {
+                        $('#door_' + result.initial_choice).html('First Choice')
+                    }, speed)
+                    setTimeout(function() {
+                        $('#door_' + result.revealed_choice).html('Revealed').addClass('losing')
+                    }, 2 * speed)
+                    setTimeout(function() {
+                        $('#door_' + result.switch_choice).html('Switch')
+                    }, 3 * speed)
+                    setTimeout(function() {
+                        $('#door_' + result.winning_choice).addClass('winning')
+                        declareWinner(result)
+                    }, 4 * speed)
+                }
+            }
+
+            function declareWinner(result) {
+                if (result.initial_choice == result.winning_choice) {
+                    $('#stay_result').html('Stay strategy WINS')
+                    $('#stay_result').removeClass('losing').addClass('winning')
+                    $('#stay_wins').text(parseInt($('#stay_wins').text()) + 1)
+                } else {
+                    $('#stay_result').html('Stay strategy LOSES')
+                    $('#stay_result').removeClass('winning').addClass('losing')
+                    $('#stay_losses').text(parseInt($('#stay_losses').text()) + 1)
+                }
+                stay_wins = parseInt($('#stay_wins').text())
+                stay_losses = parseInt($('#stay_losses').text())
+                stay_pct = stay_wins / (stay_wins + stay_losses) * 100
+                $('#stay_pct').text(stay_pct.toFixed(4))
+
+                if (result.switch_choice == result.winning_choice) {
+                    $('#switch_result').html('Switch strategy WINS')
+                    $('#switch_result').removeClass('losing').addClass('winning')
+                    $('#switch_wins').text(parseInt($('#switch_wins').text()) + 1)
+                } else {
+                    $('#switch_result').html('Switch strategy LOSES')
+                    $('#switch_result').removeClass('winning').addClass('losing')
+                    $('#switch_losses').text(parseInt($('#switch_losses').text()) + 1)
+                }
+                switch_wins = parseInt($('#switch_wins').text())
+                switch_losses = parseInt($('#switch_losses').text())
+                switch_pct = switch_wins / (switch_wins + switch_losses) * 100
+                $('#switch_pct').text(switch_pct.toFixed(4))
+            }
+
+            function loadResultSet() {
+                if (running == true) {
+                    $('#runState').html('running')
+                    $.get('/results?num=' + (20 * (100 / speed)),
+                            function(data){
+                        results.push($.parseJSON(data))
+                        var n = 10 * speed
+                        for (var idx in results) {
+                            setTimeout(function() {
+                                display()
+                            }, n)
+                            n += 10 * speed
+                        }
+                    })
+                } else {
+                    $('#runState').html('stopped')
+                }
+                setTimeout('loadResultSet()', (100 * speed))
+            }
+
+            function runStop() {
+                if (running == false) {
+                    running = true
+                    $('#runStopButton').html('STOP')
+                    $('#runState').html('starting...')
+                } else {
+                    running = false
+                    $('#runStopButton').html('RUN')
+                    $('#runState').html('stopping...')
+                }
+            }
+
+            function changeSpeed() {
+                if (speed == 100) {
+                    $('#speedState').html('fast')
+                    $('#speedButton').html('SLOWER')
+                    speed = 10
+                } else {
+                    $('#speedState').html('slow')
+                    $('#speedButton').html('FASTER')
+                    speed = 100
+                }
+            }
+
+            $(document).ready(function(){
+                loadResultSet()
+                //runInterval = setInterval("loadResultSet()", 11000)
+            })
+        </script>
+    </body>
+</html>

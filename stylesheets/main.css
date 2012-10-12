@@ -1,0 +1,54 @@
+body {
+  background-color: #333;
+  color: #DDD;
+  font-family: 'Fanwood Text', serif;
+  padding-left: 20px;
+}
+
+h1 {
+  font-size: 20pt;
+  font-weight: normal;
+}
+
+div.door {
+  border: 2px solid #DDD;
+  padding: 10px;
+  width: 80px;
+  height: 160px;
+  margin-left: 50px;
+  float: left;
+}
+div.player {
+  margin-left: 20px;
+  float: left;
+  width: 300px;
+}
+#runState {
+  margin-bottom: 10px;
+}
+#runControl {
+  border: 1px solid #DDD;
+  margin-left: 20px;
+  margin-top: 20px;
+  padding: 10px;
+  width: 60px;
+}
+
+.clear {
+  clear: both;
+}
+
+.player .winning {
+  color: #9F9;
+}
+.player .losing {
+  color: #F99;
+}
+.door.winning {
+  background-color: #9F9;
+  color: black;
+}
+.door.losing {
+  background-color: #F99;
+  color: black;
+}
