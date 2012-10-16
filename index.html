@@ -18,7 +18,11 @@
             <br class="clear" />
 
             <div class="player">
-                <h3 id="stay_result">Stay strategy</h3>
+                <h3 class="stay">
+                    Stay strategy
+                    <span id="stay_result">
+                    </span>
+                </h3>
                 <dl>
                     <dt>Wins</dt>
                     <dd id="stay_wins">0</dd>
@@ -34,7 +38,11 @@
             </div>
 
             <div class="player">
-                <h3 id="switch_result">Switch strategy</h3>
+                <h3 class="switch">
+                    Switch strategy
+                    <span id="switch_result">
+                    </span>
+                </h3>
                 <dl>
                     <dt>Wins</dt>
                     <dd id="switch_wins">0</dd>
@@ -50,6 +58,9 @@
             </div>
 
             <br class="clear" />
+
+            <div id="percentageChart">
+            </div>
 
             <div id="runControl">
                 <div id="runState">running</div>
@@ -83,6 +94,7 @@
                 <br/><br/>
                 1) The probability of winning with the stay strategy is clearly
                 1/3. The switch strategy wins if and only if the stay strategy loses.
+                So it must have probability 1 - 1/3 = 2/3.
                 <br/><br/>
                 2) The switch strategy is equivalent to choosing <b>both</b> of the
                 doors not yet chosen, because you win if either of those hides the
@@ -110,6 +122,7 @@
         </div>
 
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
         <script type="text/javascript">
             // globals
             running = true
@@ -120,8 +133,8 @@
                 for (n=1; n <= 3; n++) {
                     $('#door_' + n).removeClass('winning losing chosen').html('')
                 }
-                $('#stay_result').removeClass('winning losing').html('Stay strategy')
-                $('#switch_result').removeClass('winning losing').html('Switch strategy')
+                $('#stay_result').removeClass('winning losing').html('')
+                $('#switch_result').removeClass('winning losing').html('')
             }
 
             function display() {
@@ -152,25 +165,26 @@
 
             function declareWinner(result) {
                 if (result.initial_choice == result.winning_choice) {
-                    $('#stay_result').html('Stay strategy WINS')
+                    $('#stay_result').html('WINS')
                     $('#stay_result').removeClass('losing').addClass('winning')
                     $('#stay_wins').text(parseInt($('#stay_wins').text()) + 1)
                 } else {
-                    $('#stay_result').html('Stay strategy LOSES')
+                    $('#stay_result').html('LOSES')
                     $('#stay_result').removeClass('winning').addClass('losing')
                     $('#stay_losses').text(parseInt($('#stay_losses').text()) + 1)
                 }
                 stay_wins = parseInt($('#stay_wins').text())
                 stay_losses = parseInt($('#stay_losses').text())
                 stay_pct = stay_wins / (stay_wins + stay_losses) * 100
+                $('#percentageChart').progressbar({value: stay_pct})
                 $('#stay_pct').text(stay_pct.toFixed(4) + '%')
 
                 if (result.switch_choice == result.winning_choice) {
-                    $('#switch_result').html('Switch strategy WINS')
+                    $('#switch_result').html('WINS')
                     $('#switch_result').removeClass('losing').addClass('winning')
                     $('#switch_wins').text(parseInt($('#switch_wins').text()) + 1)
                 } else {
-                    $('#switch_result').html('Switch strategy LOSES')
+                    $('#switch_result').html('LOSES')
                     $('#switch_result').removeClass('winning').addClass('losing')
                     $('#switch_losses').text(parseInt($('#switch_losses').text()) + 1)
                 }

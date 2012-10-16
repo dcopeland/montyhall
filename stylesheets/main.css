@@ -11,6 +11,9 @@ h1 {
   font-weight: normal;
   margin-left: 20px;
 }
+h3 {
+  font-weight: normal;
+}
 .footnote {
   font-size: smaller;
 }
@@ -44,6 +47,17 @@ h1 {
   width: 60px;
 }
 
+#percentageChart {
+  background-color: #FF9;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+.ui-progressbar-value {
+  background-color: #99F;
+  height: 2px;
+  padding: 1px;
+}
+
 .player {
   margin-left: 20px;
   float: left;
@@ -54,6 +68,12 @@ h1 {
 }
 .player .losing {
   color: #F99;
+}
+h3.stay {
+  color: #99F;
+}
+h3.switch {
+  color: #FF9;
 }
 
 .door {
