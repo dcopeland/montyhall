@@ -1,7 +1,8 @@
 <html>
     <head>
-        <link href="/stylesheets/main.css" type="text/css" rel="stylesheet">
         <link href='http://fonts.googleapis.com/css?family=Fanwood+Text' rel='stylesheet' type='text/css'>
+        <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/overcast/jquery-ui.css" rel="stylesheet" type="text/css" media="all" />
+        <link href="/stylesheets/main.css" type="text/css" rel="stylesheet">
     </head>
     <body>
         <h1>Monty Hall Problem Demonstration</h1>
@@ -59,14 +60,19 @@
 
             <br class="clear" />
 
-            <div id="percentageChart">
+            <div id="percentageChart" class="ui-corner-all">
             </div>
 
             <div id="runControl">
-                <div id="runState">running</div>
-                <button id="runStopButton" onClick="runStop()">STOP</button>
-                <div id="speedState">slow</div>
-                <button id="speedButton" onClick="changeSpeed()">FASTER</button>
+                <a id="playButton" href="javascript:play()" style="display: none">
+                    <img src="images/control_play.png" />
+                </a>
+                <a id="pauseButton" href="javascript:pause()">
+                    <img src="images/control_pause.png" />
+                </a>
+                <div class="label">speed</div>
+                <div id="speedSlider"></div>
+                </div>
             </div>
         </div>
         <div class="column right">
@@ -117,16 +123,17 @@
         <br class="clear"/>
         <div id="attrib">
             <span class="footnote">Built by and &copy; <a href="http://about.me/dpc47">
-                Dan Copeland</a>
+                Dan Copeland</a>. Silk icons by <a href="http://famfamfam.com">
+                Mark James</a>.
             </span
         </div>
 
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/jquery-ui.min.js"></script>
         <script type="text/javascript">
             // globals
             running = true
-            speed = 300 // slow: 300, fast: 5
+            delayFactor = 200
             results = []
 
             function reset() {
@@ -146,20 +153,20 @@
                     reset()
                     setTimeout(function() {
                         $('#door_' + result.initial_choice).html('First Choice').addClass('chosen')
-                    }, speed)
+                    }, delayFactor)
                     setTimeout(function() {
                         $('#door_' + result.revealed_choice).html('Revealed').addClass('losing')
-                    }, 2 * speed)
+                    }, 2 * delayFactor)
                     setTimeout(function() {
                         $('#door_' + result.switch_choice).html('Switch')
-                    }, 3 * speed)
+                    }, 3 * delayFactor)
                     setTimeout(function() {
                         $('#door_' + result.winning_choice).removeClass('chosen').addClass('winning')
                         declareWinner(result)
-                    }, 4 * speed)
+                    }, 4 * delayFactor)
                 }
                 if (running) {
-                    var delay = 10 * speed
+                    var delay = 10 * delayFactor
                     if (results.length == 0) {
                         delay = 500
                     }
@@ -208,33 +215,29 @@
                 })
             }
 
-            function runStop() {
-                if (running == false) {
-                    running = true
-                    $('#runStopButton').html('STOP')
-                    $('#runState').html('running')
-                    display()
-                } else {
-                    running = false
-                    results = []
-                    $('#runStopButton').html('RUN')
-                    $('#runState').html('stopped')
-                }
+            function pause() {
+                running = false
+                results = []
+                $('#pauseButton').hide()
+                $('#playButton').show()
             }
 
-            function changeSpeed() {
-                if (speed == 300) {
-                    $('#speedState').html('fast')
-                    $('#speedButton').html('SLOWER')
-                    speed = 5
-                } else {
-                    $('#speedState').html('slow')
-                    $('#speedButton').html('FASTER')
-                    speed = 300
-                }
+            function play() {
+                running = true
+                $('#playButton').hide()
+                $('#pauseButton').show()
+                display()
             }
 
             $(document).ready(function(){
+                $('#speedSlider').slider({
+                    value: 25,
+                    min: 5,
+                    max: 500,
+                    change: function(event, ui) {
+                        delayFactor = 500 / ui.value * 10
+                    }
+                })
                 display()
             })
         </script>

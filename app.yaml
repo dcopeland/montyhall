@@ -1,5 +1,5 @@
 application: dpc-montyhall
-version: 5
+version: 6
 runtime: python27
 api_version: 1
 threadsafe: true
@@ -7,6 +7,8 @@ threadsafe: true
 handlers:
 - url: /stylesheets
   static_dir: stylesheets
+- url: /images
+  static_dir: images
 
 - url: /.*
   script: montyhall.app
