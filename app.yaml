@@ -1,5 +1,5 @@
-application: dpc-montyhall
-version: 6
+#application: dpc-montyhall
+#version: 6
 runtime: python27
 api_version: 1
 threadsafe: true
@@ -12,6 +12,7 @@ handlers:
 
 - url: /.*
   script: montyhall.app
+  secure: always
 
 libraries:
 - name: jinja2
